@@ -1,0 +1,30 @@
+Here's the precise prompt to add your SMT experience without touching anything else:
+
+
+Add a new experience entry to the existing Experience (Work Experience) section timeline — do not change any other section, design, color, layout, animation, or functionality anywhere on the page.
+
+📌 New Timeline Entry to Add
+Insert this as a new card in the vertical timeline, following the same exact glassmorphism card style, electric blue timeline dot, and layout as the existing Maven Silicon and IoT Developer entries.
+Company: Unitechplasto Components Pvt Ltd
+Department: SMT Department (Surface Mount Technology)
+Role/Title: SMT Intern / Production Trainee (or just label it as SMT Department)
+Bullet points:
+
+Worked in the SMT (Surface Mount Technology) department gaining hands-on production floor experience
+Learned and practiced Selective Soldering techniques on PCB assemblies
+Performed Manual Soldering for through-hole and surface mount components
+Conducted PCB Testing using ICT (In-Circuit Testing) to verify board functionality and detect defects
+Gained practical understanding of SMT production workflow, quality checks, and component handling
+
+
+⚙️ Implementation Rules
+
+Do not change the design, colors, fonts, animations, layout, or any other section
+Use the exact same timeline card style — glassmorphism background rgba(255,255,255,0.05), backdrop-filter: blur(12px), electric blue (#00E5FF) left accent line, glowing dot on the timeline
+Place this entry between Maven Silicon and IoT Developer, or at the bottom of the timeline — whichever feels more chronologically natural
+Keyword terms like Selective Soldering, Manual Soldering, ICT, SMT should be wrapped in a subtle color: #00E5FF inline highlight or styled as small tag chips — same chip style used in the Skills and Projects sections
+The card must have the same scroll reveal animation (fade-in + translateY) as the other timeline cards via the existing Intersection Observer — just add the same CSS class used on existing timeline cards
+No new JS, no new CSS variables, no new fonts — reuse everything already on the page
+
+
+Only modify the Experience section HTML. Everything else stays identical.

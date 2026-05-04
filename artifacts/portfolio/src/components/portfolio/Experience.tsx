@@ -1,17 +1,51 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-const experiences = [
+type Bullet = { text: string; highlights?: string[] };
+
+const experiences: {
+  company: string;
+  year: string;
+  role: string;
+  bullets: Bullet[];
+}[] = [
   {
     company: "Maven Silicon",
     year: "2025",
     role: "VLSI Design Intern",
     bullets: [
-      "Designed and implemented RTL for AHB-to-APB bridge using Verilog.",
-      "Gained hands-on experience in AMBA bus architecture and SoC design.",
-      "Performed RTL verification and debugging.",
-      "Applied VLSI design principles in real-time projects.",
-      "Collaborated with team on technical solutions.",
+      { text: "Designed and implemented RTL for AHB-to-APB bridge using Verilog." },
+      { text: "Gained hands-on experience in AMBA bus architecture and SoC design." },
+      { text: "Performed RTL verification and debugging." },
+      { text: "Applied VLSI design principles in real-time projects." },
+      { text: "Collaborated with team on technical solutions." },
+    ],
+  },
+  {
+    company: "Unitechplasto Components Pvt Ltd",
+    year: "SMT Dept",
+    role: "SMT Intern / Production Trainee",
+    bullets: [
+      {
+        text: "Worked in the SMT (Surface Mount Technology) department gaining hands-on production floor experience.",
+        highlights: ["SMT"],
+      },
+      {
+        text: "Learned and practiced Selective Soldering techniques on PCB assemblies.",
+        highlights: ["Selective Soldering"],
+      },
+      {
+        text: "Performed Manual Soldering for through-hole and surface mount components.",
+        highlights: ["Manual Soldering"],
+      },
+      {
+        text: "Conducted PCB Testing using ICT (In-Circuit Testing) to verify board functionality and detect defects.",
+        highlights: ["ICT"],
+      },
+      {
+        text: "Gained practical understanding of SMT production workflow, quality checks, and component handling.",
+        highlights: ["SMT"],
+      },
     ],
   },
   {
@@ -19,11 +53,11 @@ const experiences = [
     year: "Independent",
     role: "IoT & Embedded Systems",
     bullets: [
-      "Developed IoT-based systems using sensors.",
-      "Integrated ESP32 with Firebase for real-time data sync.",
-      "Designed a web dashboard to monitor sensor data.",
-      "Won international-level Protothon/Hackathon.",
-      "Active IEEE member; coordinated multiple technical events.",
+      { text: "Developed IoT-based systems using sensors." },
+      { text: "Integrated ESP32 with Firebase for real-time data sync." },
+      { text: "Designed a web dashboard to monitor sensor data." },
+      { text: "Won international-level Protothon/Hackathon." },
+      { text: "Active IEEE member; coordinated multiple technical events." },
     ],
   },
 ];
@@ -101,16 +135,41 @@ export default function Experience() {
                 </div>
 
                 <ul className="flex flex-col gap-2">
-                  {exp.bullets.map((b) => (
-                    <li
-                      key={b}
-                      className="text-xs flex gap-2"
-                      style={{ color: "#B3B3B3", fontFamily: "'IBM Plex Mono', monospace" }}
-                    >
-                      <span style={{ color: "#00E5FF", flexShrink: 0 }}>›</span>
-                      {b}
-                    </li>
-                  ))}
+                  {exp.bullets.map((b, bi) => {
+                    let rendered: React.ReactNode = b.text;
+                    if (b.highlights?.length) {
+                      const parts = b.text.split(
+                        new RegExp(`(${b.highlights.join("|")})`, "g")
+                      );
+                      rendered = parts.map((part, pi) =>
+                        b.highlights!.includes(part) ? (
+                          <span
+                            key={pi}
+                            className="inline-block px-1.5 py-0 mx-0.5 rounded-sm text-[10px] align-middle"
+                            style={{
+                              background: "rgba(0,229,255,0.12)",
+                              border: "1px solid rgba(0,229,255,0.35)",
+                              color: "#00E5FF",
+                            }}
+                          >
+                            {part}
+                          </span>
+                        ) : (
+                          <span key={pi}>{part}</span>
+                        )
+                      );
+                    }
+                    return (
+                      <li
+                        key={bi}
+                        className="text-xs flex gap-2 items-baseline"
+                        style={{ color: "#B3B3B3", fontFamily: "'IBM Plex Mono', monospace" }}
+                      >
+                        <span style={{ color: "#00E5FF", flexShrink: 0 }}>›</span>
+                        <span>{rendered}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </motion.div>
