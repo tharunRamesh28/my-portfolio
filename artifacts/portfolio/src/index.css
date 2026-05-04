@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=IBM+Plex+Mono:wght@300;400;500&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --font-sans: var(--app-font-sans);
+  --font-serif: var(--app-font-serif);
+  --font-mono: var(--app-font-mono);
+  --font-display: var(--app-font-display);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 4%;
+  --card-foreground: 0 0% 100%;
+  --border: 190 100% 50% / 0.15;
+  --input: 190 100% 50% / 0.2;
+  --ring: 190 100% 50%;
+  
+  --primary: 190 100% 50%;
+  --primary-foreground: 0 0% 0%;
+  
+  --secondary: 262 83% 65%;
+  --secondary-foreground: 0 0% 100%;
+  
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 70%;
+  
+  --accent: 190 100% 50%;
+  --accent-foreground: 0 0% 0%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  
+  --popover: 0 0% 3%;
+  --popover-foreground: 0 0% 100%;
+  --popover-border: 190 100% 50% / 0.15;
+
+  --app-font-sans: 'IBM Plex Mono', monospace;
+  --app-font-serif: Georgia, serif;
+  --app-font-mono: 'IBM Plex Mono', monospace;
+  --app-font-display: 'Orbitron', sans-serif;
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 4%;
+  --card-foreground: 0 0% 100%;
+  --border: 190 100% 50% / 0.15;
+  --input: 190 100% 50% / 0.2;
+  --ring: 190 100% 50%;
+  
+  --primary: 190 100% 50%;
+  --primary-foreground: 0 0% 0%;
+  
+  --secondary: 262 83% 65%;
+  --secondary-foreground: 0 0% 100%;
+  
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 70%;
+  
+  --accent: 190 100% 50%;
+  --accent-foreground: 0 0% 0%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  
+  --popover: 0 0% 3%;
+  --popover-foreground: 0 0% 100%;
+  --popover-border: 190 100% 50% / 0.15;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-mono antialiased bg-background text-foreground;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 229, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 229, 255, 0.15);
+}
+
+.pcb-bg {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%2300E5FF' stroke-width='0.5' stroke-opacity='0.05'%3E%3Cpath d='M10 10l20 20h20l10-10H80'/%3E%3Ccircle cx='80' cy='20' r='2'/%3E%3Cpath d='M30 90l10-10v-20l-10-10H10'/%3E%3Ccircle cx='10' cy='50' r='2'/%3E%3Cpath d='M90 90l-10-10V60l10-10h10'/%3E%3Ccircle cx='90' cy='40' r='2'/%3E%3Cpath d='M50 50l10 10v20'/%3E%3Ccircle cx='60' cy='80' r='2'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+
+.neon-border {
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+}

@@ -1,0 +1,112 @@
+Build a single-page portfolio website for Tharun Ramesh — an Electronics & Communication Engineering student specializing in Embedded Systems, IoT, and VLSI.
+
+🖤 Visual Identity & Theme
+Use a pure black (#000000) background across the entire site — never deviate to dark navy or dark grey as the base. Create depth exclusively through:
+
+Glassmorphism cards using rgba(255,255,255,0.05) backgrounds with backdrop-filter: blur(12px)
+Glow effects using box-shadow with electric blue (#00E5FF) and neon purple (#8B5CF6)
+A very faint circuit board / PCB trace SVG pattern at 3–5% opacity as a full-page background texture — this is the signature visual element
+
+Accent palette:
+
+Primary highlight: #00E5FF (electric blue)
+Secondary emphasis: #8B5CF6 (neon purple)
+Text primary: #FFFFFF
+Text secondary: #B3B3B3, #6B7280
+Depth layer: rgba(255,255,255,0.08)
+
+
+🧭 Navigation
+
+Fixed top navbar, fully transparent with a very thin 1px bottom border in rgba(0,229,255,0.15)
+Left side: Name "THARUN RAMESH" in monospace font with a blinking cursor animation after it
+Right side: Hamburger menu (three horizontal lines) — clicking it slides open a full-screen overlay menu with section links: Home, About, Skills, Projects, Experience, Achievements, Contact
+Overlay menu has a blurred dark background, links animate in with staggered fade+slide
+A thin electric blue scroll progress bar runs along the very top of the viewport
+
+
+🦸 Hero Section
+
+Centered layout with a circular profile photo placeholder at the top — size it as half the typical hero image size (roughly 120px diameter), with a glowing electric blue ring border (box-shadow: 0 0 20px #00E5FF) and a subtle rotating gradient border animation
+Below the photo: Name in large bold display font, then a typewriter effect cycling through: "Embedded Systems Engineer", "IoT Developer", "VLSI Enthusiast", "Hackathon Winner"
+Subtext: one-line tagline from his profile summary
+CTA buttons: "View Projects" (electric blue outline, glow on hover) and "Download Resume" (ghost style)
+Floating particle/circuit line canvas animation in the background — slow-moving glowing dots connected by faint lines, reacting subtly to mouse cursor movement (parallax feel)
+Smooth scroll indicator arrow at bottom
+
+
+👤 About Section
+Use this profile summary verbatim:
+"Creative and highly motivated Electronics and Communication Engineering student with a strong interest in Embedded Systems, IoT, and VLSI. Known for innovative thinking and problem-solving ability, with hands-on experience in developing real-time sensor-based projects and participating in international hackathons. Possesses foundational skills in C, C++, and Python, along with knowledge of digital electronics and SoC concepts. Currently seeking internship opportunities to apply technical skills, gain industry experience, and contribute to impactful engineering solutions."
+Display inside a glassmorphism card with a subtle left accent line in electric blue.
+
+⚙️ Skills Section
+Title: TECHNICAL SKILLS
+Display each skill as a pill/tag chip with a glassmorphism background and electric blue or purple border glow on hover. Group them:
+
+Languages: C, C++, Python, HTML, CSS, JavaScript
+Hardware: Embedded Systems (ESP32, Arduino), IoT & Sensor Integration, Digital Electronics & Analog Fundamentals, VLSI (Basic)
+Tools & Design: FreeCAD, KiCad (PCB Design), Firebase (Realtime DB, Cloud Integration)
+Other: AI-Powered Web Development
+
+Chips animate in with staggered fade on scroll-enter. Hovering a chip causes a soft glow pulse.
+
+🔬 Projects Section
+Three glassmorphism cards in a responsive grid (3-col desktop, 1-col mobile):
+1. Smart IV Drip Monitoring System — Developed a system to monitor IV fluid level using sensors. Implemented alert mechanism for low fluid condition.
+2. Smart Air Quality Monitoring System — Built a system to detect air pollutants using MQ sensors. Enabled real-time monitoring using IoT.
+3. ECG-Based Authentication System — Designed a system to identify users based on ECG signals. Applied basic signal processing concepts.
+Each card: hover lifts with translateY(-6px) and blue glow. Top-left corner accent line in electric blue. Skill tags on each card.
+
+💼 Experience Section
+Vertical timeline layout with electric blue line and glowing dot markers:
+Maven Silicon — 2025
+Designed and implemented RTL for AHB-to-APB bridge using Verilog. Gained hands-on experience in AMBA bus architecture and SoC design. Performed RTL verification and debugging. Applied VLSI design principles in real-time projects. Collaborated with team on technical solutions.
+IoT Developer
+Developed IoT-based systems using sensors. Integrated ESP32 with Firebase. Designed a web dashboard to monitor sensor data. Won international-level Protothon/Hackathon. Active IEEE member; coordinated multiple technical events.
+
+🏆 Achievements Section
+Three badge-style tiles with glowing trophy icons:
+
+🏆 Winner — International Protothon
+🏆 Winner — Hackathon
+🥇 Best Capstone Project Award
+
+Gold/yellow accent (#FFD700) only for trophy icons. Cards animate with scale-up on scroll.
+
+📬 Contact Section
+Title: GET IN TOUCH
+Centered layout — each item is an icon + text row inside a glassmorphism card. Hovering highlights with an electric blue glow. All links must be functional — no broken buttons:
+
+📞 Phone: +91 7358844091 → clickable tel:+917358844091
+📧 Email: rameshtharun067@gmail.com → clickable mailto:rameshtharun067@gmail.com
+📍 Location: Chennai, Poonamallee → non-clickable, display only
+🔗 LinkedIn: Tharun Ramesh → clicking opens https://www.linkedin.com/in/tharun-ramesh25 in a new tab (target="_blank" rel="noopener noreferrer"). Style the LinkedIn card with the LinkedIn blue (#0A66C2) icon glow on hover, distinct from the electric blue used elsewhere, so it's instantly recognizable as a LinkedIn link.
+
+
+🎨 Typography
+
+Headings: "Orbitron" from Google Fonts — technical, sharp, futuristic
+Body: "IBM Plex Mono" from Google Fonts — readable monospace reinforcing the embedded systems theme
+Section titles: uppercase, letter-spaced, electric blue underline accent
+
+
+✨ Micro-interactions & Polish
+
+Custom cursor: soft electric blue glow dot following the mouse with slight lag
+Scroll progress bar: 2px tall, electric blue, pinned to very top of page
+Section reveal animations: fade-in + translateY(20px → 0) via Intersection Observer
+Smooth scroll site-wide
+Zero broken or non-functional elements — every button and link works
+No placeholder or lorem ipsum text — all content from resume above
+
+
+📐 Layout Rules
+
+Max content width: 1100px, centered
+Fully mobile responsive with hamburger nav at all screen sizes
+Sections separated by 100px vertical padding
+Footer: © 2025 Tharun Ramesh. Built with precision. — centered, small grey text
+
+
+Deliver as a single self-contained index.html with all CSS in a <style> block and all JS in a <script> block. Import fonts from Google Fonts CDN. Pure HTML, CSS, and vanilla JS — no external frameworks.
