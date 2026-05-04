@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import profilePhoto from "@assets/WhatsApp_Image_2026-05-04_at_10.07.47_PM_1777912834027.jpeg";
 import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -153,19 +154,27 @@ export default function Hero() {
           className="relative mb-8"
         >
           <div
-            className="w-[120px] h-[120px] rounded-full flex items-center justify-center text-2xl font-bold select-none"
             style={{
-              background: "rgba(255,255,255,0.05)",
-              backdropFilter: "blur(12px)",
               border: "2px solid #00E5FF",
               boxShadow: "0 0 25px #00E5FF, 0 0 50px rgba(0,229,255,0.3)",
-              fontFamily: "'Orbitron', sans-serif",
-              color: "#00E5FF",
+              borderRadius: "50%",
               animation: "pulse-ring 3s ease-in-out infinite",
+              lineHeight: 0,
             }}
             data-testid="img-avatar"
           >
-            TR
+            <img
+              src={profilePhoto}
+              alt="Tharun Ramesh"
+              style={{
+                width: "120px",
+                height: "120px",
+                borderRadius: "50%",
+                objectFit: "cover",
+                objectPosition: "center top",
+                display: "block",
+              }}
+            />
           </div>
         </motion.div>
 
