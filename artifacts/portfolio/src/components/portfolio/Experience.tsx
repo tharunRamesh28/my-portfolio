@@ -90,8 +90,8 @@ export default function Experience() {
             <motion.div
               key={exp.company}
               initial={{ opacity: 0, x: -20 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ delay: i * 0.2, duration: 0.5 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.15, duration: 0.5 }}
               className="pl-12 relative"
             >
               {/* Dot */}
