@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import profilePhoto from "@assets/WhatsApp_Image_2026-05-04_at_10.07.47_PM_1777912834027.jpeg";
 import { ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
@@ -137,6 +137,24 @@ function ParticleCanvas() {
 
 export default function Hero() {
   const typed = useTypewriter(roles);
+  const [resumeOpen, setResumeOpen] = useState(false);
+  const resumeUrl = `${import.meta.env.BASE_URL}resume_tharun.pdf`;
+
+  const closeResume = useCallback(() => {
+    setResumeOpen(false);
+    document.body.style.overflow = "";
+  }, []);
+
+  const openResume = useCallback(() => {
+    setResumeOpen(true);
+    document.body.style.overflow = "hidden";
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeResume(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [closeResume]);
 
   return (
     <section
@@ -245,6 +263,7 @@ export default function Hero() {
           </button>
 
           <button
+            onClick={openResume}
             className="px-7 py-3 text-sm font-bold tracking-[0.1em] uppercase transition-all duration-300"
             style={{
               fontFamily: "'Orbitron', sans-serif",
@@ -259,9 +278,9 @@ export default function Hero() {
               (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.2)";
               (e.currentTarget as HTMLButtonElement).style.color = "#B3B3B3";
             }}
-            data-testid="button-download-resume"
+            data-testid="button-view-resume"
           >
-            Download Resume
+            View Resume
           </button>
         </motion.div>
       </div>
@@ -284,6 +303,89 @@ export default function Hero() {
           50% { box-shadow: 0 0 35px #00E5FF, 0 0 70px rgba(0,229,255,0.5); }
         }
       `}</style>
+
+      {/* Resume Modal */}
+      {resumeOpen && (
+        <div
+          onClick={(e) => { if (e.target === e.currentTarget) closeResume(); }}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.95)",
+            backdropFilter: "blur(20px)",
+            zIndex: 2000,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            padding: "24px",
+          }}
+        >
+          {/* Top bar */}
+          <div
+            style={{
+              width: "100%",
+              maxWidth: "900px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "16px",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'Orbitron', sans-serif",
+                fontSize: "13px",
+                letterSpacing: "4px",
+                color: "#00E5FF",
+                textTransform: "uppercase",
+              }}
+            >
+              Resume — Tharun Ramesh
+            </span>
+            <button
+              onClick={closeResume}
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(0,229,255,0.3)",
+                color: "#FFFFFF",
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: "13px",
+                padding: "8px 20px",
+                cursor: "pointer",
+                letterSpacing: "2px",
+                transition: "all 0.3s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,229,255,0.1)";
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = "0 0 16px rgba(0,229,255,0.4)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.05)";
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = "none";
+              }}
+              data-testid="button-close-resume"
+            >
+              ✕ CLOSE
+            </button>
+          </div>
+
+          {/* PDF Embed */}
+          <iframe
+            src={resumeUrl}
+            title="Tharun Ramesh Resume"
+            style={{
+              width: "100%",
+              maxWidth: "900px",
+              height: "85vh",
+              border: "1px solid rgba(0,229,255,0.2)",
+              borderRadius: "4px",
+              boxShadow: "0 0 40px rgba(0,229,255,0.15)",
+              background: "#fff",
+            }}
+          />
+        </div>
+      )}
     </section>
   );
 }

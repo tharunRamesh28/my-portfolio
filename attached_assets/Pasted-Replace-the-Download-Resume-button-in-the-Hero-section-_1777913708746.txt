@@ -1,0 +1,110 @@
+Replace the "Download Resume" button in the Hero section with a "View Resume" button that opens the uploaded resume PDF in a fullscreen overlay modal — do not change any other section, design, color, layout, animation, or functionality anywhere on the page.
+
+📌 Button Change
+Find the existing "Download Resume" button in the Hero section and:
+
+Change the label text from "Download Resume" to "View Resume"
+Change the onclick behavior — instead of downloading, it should open a fullscreen resume modal overlay
+Keep the exact same ghost button style, hover glow effect, and positioning as before
+Do not touch the "View Projects" button next to it
+
+
+📄 Resume Modal Overlay
+When "View Resume" is clicked, a fullscreen overlay appears with the resume embedded inside. Build it exactly like this:
+html<!-- Resume Modal -->
+<div id="resume-modal" style="
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(20px);
+  z-index: 2000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 24px;
+">
+  <!-- Top bar -->
+  <div style="
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  ">
+    <span style="
+      font-family: 'Orbitron', monospace;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: #00E5FF;
+      text-transform: uppercase;
+    ">Resume — Tharun Ramesh</span>
+    <button onclick="closeResume()" style="
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(0,229,255,0.3);
+      color: #FFFFFF;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      padding: 8px 20px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      transition: all 0.3s;
+    "
+    onmouseover="this.style.background='rgba(0,229,255,0.1)';this.style.boxShadow='0 0 16px rgba(0,229,255,0.4)'"
+    onmouseout="this.style.background='rgba(255,255,255,0.05)';this.style.boxShadow='none'"
+    >✕ CLOSE</button>
+  </div>
+
+  <!-- PDF Embed -->
+  <iframe
+    src="resume_tharun_.pdf"
+    style="
+      width: 100%;
+      max-width: 900px;
+      height: 85vh;
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 4px;
+      box-shadow: 0 0 40px rgba(0,229,255,0.15);
+      background: #fff;
+    "
+  ></iframe>
+</div>
+
+⚙️ JavaScript Functions to Add
+Add these two small functions to the existing <script> block — do not replace any existing JS:
+javascriptfunction openResume() {
+  const modal = document.getElementById('resume-modal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeResume() {
+  const modal = document.getElementById('resume-modal');
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Close modal when clicking outside the iframe area
+document.getElementById('resume-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeResume();
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeResume();
+});
+
+⚙️ Implementation Rules
+
+Place the resume PDF file (resume_tharun_.pdf) in the same folder as index.html and reference it exactly as src="resume_tharun_.pdf" in the iframe
+The "View Resume" button's onclick must call openResume()
+Modal must be fully closable three ways — the ✕ CLOSE button, pressing Escape key, and clicking the dark backdrop outside the PDF
+The modal overlay uses the same black + glassmorphism aesthetic as the rest of the site — no white or bright backgrounds on the overlay itself
+The top bar label "Resume — Tharun Ramesh" uses Orbitron font in electric blue — matching the existing site typography exactly
+Do not change any other part of the Hero section or any other section on the page
+Do not remove the existing "View Projects" button
+No new CSS variables, no new fonts — reuse everything already on the page
+
+
+Only modify the Hero section button and add the modal HTML + two JS functions. Everything else stays identical.
