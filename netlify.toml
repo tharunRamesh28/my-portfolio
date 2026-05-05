@@ -1,0 +1,16 @@
+[build]
+  # Build specifically the portfolio workspace
+  command = "pnpm --filter @workspace/portfolio build"
+  
+  # The output directory configured in vite.config.ts
+  publish = "artifacts/portfolio/dist/public"
+
+[build.environment]
+  # Use a recent Node version
+  NODE_VERSION = "20"
+  
+  # Ensure Netlify uses the exact same PNPM version that generated your lockfile
+  PNPM_VERSION = "10.33.3"
+  
+  # Prevent ERR_PNPM_LOCKFILE_CONFIG_MISMATCH by allowing pnpm to resolve any minor discrepancies
+  PNPM_FLAGS = "--no-frozen-lockfile"
