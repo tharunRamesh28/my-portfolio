@@ -1,16 +1,873 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Tharun Ramesh Portfolio</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <title>Tharun Ramesh Portfolio</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono&display=swap"
+    rel="stylesheet">
+  <style>
+    /* Fullscreen Firmware Overlay */
+    #fw-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Courier New', monospace;
+      color: #00e5ff;
+      overflow: hidden;
+      user-select: none;
+      transition: opacity 600ms ease-out;
+    }
+
+    /* Skip Button styling */
+    #skip-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #555555;
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      opacity: 0.4;
+      cursor: pointer;
+      z-index: 10001;
+      transition: opacity 200ms ease, color 200ms ease;
+      padding: 5px 10px;
+    }
+
+    #skip-btn:hover {
+      opacity: 1;
+      color: #00e5ff;
+    }
+
+    #fw-scene {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      transition: opacity 600ms ease-out;
+    }
+
+    #scene-top {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 24px;
+    }
+
+    #laptop-wrap {
+      position: relative;
+      width: 340px;
+      height: 240px;
+      transition: transform 600ms ease-in;
+      transform-origin: center center;
+    }
+
+    #laptop-svg {
+      width: 340px;
+      height: 240px;
+      display: block;
+    }
+
+    /* Screen Glow */
+    #screen-glow {
+      transition: opacity 600ms ease-in-out;
+    }
+
+    /* Terminal Screen Overlay */
+    #terminal-screen {
+      position: absolute;
+      top: 7.5%;
+      left: 8.8235%;
+      width: 82.3529%;
+      height: 71.6667%;
+      background: #0a0a0a;
+      overflow-y: hidden;
+      border-radius: 3px;
+      padding: 6px 8px;
+      box-sizing: border-box;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    #terminal-lines {
+      font-family: 'Courier New', monospace;
+      font-size: 9px;
+      line-height: 1.5;
+      color: #00e5ff;
+      white-space: pre;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    #terminal-cursor {
+      display: inline-block;
+      color: #00e5ff;
+      font-size: 9px;
+      animation: blink 0.6s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    #usb-cable {
+      width: 120px;
+      height: 60px;
+      flex-shrink: 0;
+    }
+
+    /* Data dots flowing along cable */
+    .data-dot {
+      opacity: 0;
+      animation: dataFlow 1.2s linear infinite;
+    }
+
+    .dot-1 {
+      animation-delay: 0s;
+    }
+
+    .dot-2 {
+      animation-delay: 0.4s;
+    }
+
+    .dot-3 {
+      animation-delay: 0.8s;
+    }
+
+    @keyframes dataFlow {
+      0% {
+        transform: translateX(16px);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(104px);
+        opacity: 0;
+      }
+    }
+
+    #mobile-cable {
+      display: none;
+    }
+
+    #rpi-wrap {
+      width: 200px;
+      height: 280px;
+      transition: transform 600ms ease-in;
+      transform-origin: center center;
+    }
+
+    #rpi-svg {
+      width: 200px;
+      height: 280px;
+      display: block;
+    }
+
+    /* Bottom Progress Console */
+    #scene-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    #fw-status-text {
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      color: #00e5ff;
+      margin-bottom: 10px;
+      text-align: center;
+      min-height: 20px;
+      text-shadow: 0 0 5px rgba(0, 229, 255, 0.4);
+      transition: color 300ms ease, text-shadow 300ms ease;
+    }
+
+    #fw-bar-wrap {
+      width: 500px;
+      max-width: 90vw;
+      height: 6px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 3px;
+      position: relative;
+      margin: 0 auto 10px;
+    }
+
+    #fw-bar {
+      height: 100%;
+      width: 0%;
+      background: #00e5ff;
+      border-radius: 3px;
+      transition: width 0.1s linear, background-color 300ms ease, box-shadow 300ms ease;
+      box-shadow: 0 0 8px #00e5ff, 0 0 16px rgba(0, 229, 255, 0.3);
+    }
+
+    #fw-bar-pct {
+      position: absolute;
+      right: -36px;
+      top: -7px;
+      font-size: 11px;
+      color: #00e5ff;
+      font-family: 'Courier New', monospace;
+    }
+
+    #fw-log {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: #555555;
+      text-align: center;
+      height: 18px;
+      overflow: hidden;
+    }
+
+    /* Glow burst radial element injected in Phase 5 */
+    #glow-burst {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: radial-gradient(circle at center, rgba(0, 229, 255, 0.25) 0%, transparent 65%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Phase transitions triggered via classes */
+    .phase-5 #screen-glow {
+      opacity: 0.15;
+    }
+
+    .phase-5 #laptop-wrap {
+      transform: scale(1.4);
+    }
+
+    .phase-5-fadeout #fw-scene {
+      opacity: 0;
+    }
+
+    /* Mobile styling */
+    @media (max-width: 600px) {
+      #scene-top {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      #laptop-wrap {
+        transform: scale(calc(85vw / 340));
+        margin: calc((85vw - 340px) / 2) 0;
+      }
+
+      #rpi-wrap {
+        transform: scale(calc(60vw / 200));
+        margin: calc((60vw - 280px) / 2) 0;
+      }
+
+      #usb-cable {
+        display: none !important;
+      }
+
+      #mobile-cable {
+        display: block;
+        width: 0px;
+        height: 30px;
+        border-left: 2px dashed #444;
+        margin: 5px 0;
+        opacity: 0.8;
+      }
+
+      #fw-status-text {
+        font-size: 11px;
+      }
+
+      #fw-bar-pct {
+        font-size: 10px;
+        right: -30px;
+      }
+
+      #fw-log {
+        font-size: 9px;
+      }
+    }
+
+    /* ═══ TICKER OUTER CONTAINER ═══ */
+    #img-ticker {
+      width: 100%;
+      height: 90px;
+      background: #000000;
+      overflow: hidden;
+      position: relative;
+      border-top: 1px solid rgba(0, 229, 255, 0.1);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ═══ LEFT FADE EDGE ═══ */
+    #img-ticker::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(to right, #000000 0%, transparent 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ═══ RIGHT FADE EDGE ═══ */
+    #img-ticker::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(to left, #000000 0%, transparent 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* ═══ SCROLLING TRACK ═══ */
+    #img-ticker-track {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+      height: 90px;
+      width: max-content;
+      padding: 0;
+      background: #000000;
+      animation: imgTickerScroll 10s linear infinite;
+      will-change: transform;
+    }
+
+    /* Pause scrolling when user hovers over the ticker */
+    #img-ticker-track:hover {
+      animation-play-state: paused;
+    }
+
+    /* ═══ SCROLL KEYFRAME ═══ */
+    @keyframes imgTickerScroll {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* ═══ EACH IMAGE ═══ */
+    .ticker-img {
+      height: 70px;
+      width: auto;
+      max-width: 110px;
+      flex-shrink: 0;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      box-shadow: none;
+      background: #000000;
+      pointer-events: none;
+      -webkit-user-drag: none;
+      transition: transform 0.3s ease;
+
+      /* WHITE TO BLACK BACKGROUND CONVERSION */
+      /* Step 1: invert flips white(255,255,255) to black(0,0,0) */
+      /* Step 2: hue-rotate(180deg) restores original component colors */
+      filter: invert(1) hue-rotate(180deg);
+    }
+
+    /* ═══ ACCESSIBILITY ═══ */
+    @media (prefers-reduced-motion: reduce) {
+      #img-ticker-track {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- loading-overlay -->
+  <div id="fw-overlay">
+    <button id="skip-btn">SKIP</button>
+    <div id="fw-scene">
+      <div id="scene-top">
+        <div id="laptop-wrap">
+          <svg id="laptop-svg" viewBox="0 0 340 240" xmlns="http://www.w3.org/2000/svg">
+            <!-- Screen Bezel -->
+            <rect x="20" y="10" width="300" height="190" rx="8" fill="#1a1a1a" stroke="#333" stroke-width="2" />
+            <rect x="30" y="18" width="280" height="172" rx="4" fill="#0a0a0a" />
+            <circle cx="170" cy="14" r="3" fill="#333" />
+            <!-- Hinge -->
+            <rect x="20" y="198" width="300" height="6" rx="2" fill="#222" stroke="#333" />
+            <!-- Base -->
+            <rect x="0" y="204" width="340" height="28" rx="4" fill="#1a1a1a" stroke="#2a2a2a" />
+            <rect x="120" y="210" width="100" height="14" rx="3" fill="#222" stroke="#333" />
+            <rect x="8" y="210" width="18" height="8" rx="1" fill="#111" stroke="#444" />
+            <rect x="314" y="210" width="18" height="8" rx="1" fill="#111" stroke="#444" />
+            <circle cx="170" cy="217" r="5" fill="none" stroke="#333" />
+            <!-- Screen Glow Rect -->
+            <rect id="screen-glow" x="30" y="18" width="280" height="172" rx="4" fill="#00e5ff" opacity="0" />
+          </svg>
+          <div id="terminal-screen">
+            <div id="terminal-lines"></div>
+            <div id="terminal-cursor">█</div>
+          </div>
+        </div>
+
+        <!-- USB Connection -->
+        <svg id="usb-cable" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 30 C50 30 70 30 104 30" stroke="#444" stroke-width="5" fill="none" stroke-linecap="round" />
+          <rect x="0" y="22" width="16" height="16" rx="2" fill="#222" stroke="#555" stroke-width="1.5" />
+          <rect x="104" y="22" width="16" height="16" rx="2" fill="#222" stroke="#555" stroke-width="1.5" />
+          <circle cx="0" cy="30" r="3" fill="#00e5ff" class="data-dot dot-1" />
+          <circle cx="0" cy="30" r="3" fill="#00e5ff" class="data-dot dot-2" />
+          <circle cx="0" cy="30" r="3" fill="#00e5ff" class="data-dot dot-3" />
+        </svg>
+        <div id="mobile-cable"></div>
+
+        <!-- Raspberry Pi 4B SVG -->
+        <div id="rpi-wrap">
+          <svg id="rpi-svg" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+            <!-- PCB Board -->
+            <rect x="10" y="10" width="180" height="220" rx="6" fill="#1a3a1a" stroke="#00aa44" stroke-width="2" />
+            <!-- Mounting holes -->
+            <circle cx="22" cy="22" r="5" fill="#0a0a0a" stroke="#00aa44" stroke-width="1" />
+            <circle cx="178" cy="22" r="5" fill="#0a0a0a" stroke="#00aa44" stroke-width="1" />
+            <circle cx="22" cy="218" r="5" fill="#0a0a0a" stroke="#00aa44" stroke-width="1" />
+            <circle cx="178" cy="218" r="5" fill="#0a0a0a" stroke="#00aa44" stroke-width="1" />
+            <!-- PCB Traces -->
+            <path d="M 130 110 L 150 110 L 155 125 L 170 125" stroke="#00aa44" stroke-width="0.8" opacity="0.4"
+              fill="none" />
+            <path d="M 130 130 L 145 130 L 150 150 L 170 150" stroke="#00aa44" stroke-width="0.8" opacity="0.4"
+              fill="none" />
+            <path d="M 85 150 L 85 200 L 75 210 L 75 225" stroke="#00aa44" stroke-width="0.8" opacity="0.4"
+              fill="none" />
+            <path d="M 130 140 L 160 140 L 165 180 L 170 180" stroke="#00aa44" stroke-width="0.8" opacity="0.4"
+              fill="none" />
+            <path d="M 70 100 L 40 100 L 30 70 L 30 30" stroke="#00aa44" stroke-width="0.8" opacity="0.4" fill="none" />
+            <path d="M 70 140 L 40 140 L 25 180 L 25 230" stroke="#00aa44" stroke-width="0.8" opacity="0.4"
+              fill="none" />
+            <!-- CPU chip -->
+            <rect x="70" y="90" width="60" height="60" rx="2" fill="#111" stroke="#555" stroke-width="1.5" />
+            <text x="100" y="124" font-size="7px" fill="#555" text-anchor="middle"
+              font-family="Courier New, monospace">BCM2711</text>
+            <!-- CPU pins -->
+            <path
+              d="M 62 95 H 70 M 62 102 H 70 M 62 109 H 70 M 62 116 H 70 M 62 123 H 70 M 62 130 H 70 M 62 137 H 70 M 62 144 H 70"
+              stroke="#555" stroke-width="0.8" />
+            <path
+              d="M 130 95 H 138 M 130 102 H 138 M 130 109 H 138 M 130 116 H 138 M 130 123 H 138 M 130 130 H 138 M 130 137 H 138 M 130 144 H 138"
+              stroke="#555" stroke-width="0.8" />
+            <path
+              d="M 75 82 V 90 M 82 82 V 90 M 89 82 V 90 M 96 82 V 90 M 103 82 V 90 M 110 82 V 90 M 117 82 V 90 M 124 82 V 90"
+              stroke="#555" stroke-width="0.8" />
+            <path
+              d="M 75 150 V 158 M 82 150 V 158 M 89 150 V 158 M 96 150 V 158 M 103 150 V 158 M 110 150 V 158 M 117 150 V 158 M 124 150 V 158"
+              stroke="#555" stroke-width="0.8" />
+            <!-- GPIO Header -->
+            <g id="gpio-pins"></g>
+            <!-- Status LEDs -->
+            <circle id="led-pwr" cx="160" cy="50" r="4" fill="#ff4444" />
+            <circle id="led-act" cx="172" cy="50" r="4" fill="#555555" />
+            <circle id="led-d1" cx="160" cy="62" r="4" fill="#555555" />
+            <circle id="led-d2" cx="172" cy="62" r="4" fill="#555555" />
+            <circle id="led-d3" cx="166" cy="74" r="4" fill="#555555" />
+            <!-- Ports -->
+            <rect x="170" y="120" width="30" height="20" rx="1" fill="#222" stroke="#555" />
+            <rect x="170" y="148" width="30" height="20" rx="1" fill="#222" stroke="#555" />
+            <rect x="60" y="225" width="50" height="14" rx="1" fill="#222" stroke="#555" />
+            <text x="85" y="234" font-size="6px" fill="#555" text-anchor="middle"
+              font-family="Courier New, monospace">HDMI</text>
+            <rect x="170" y="175" width="30" height="22" rx="1" fill="#222" stroke="#555" />
+            <rect x="10" y="230" width="30" height="10" rx="1" fill="#333" stroke="#555" />
+            <!-- Label -->
+            <text x="100" y="270" font-size="7px" fill="#00aa44" text-anchor="middle" opacity="0.7"
+              font-family="Courier New, monospace">Raspberry Pi 4B</text>
+          </svg>
+        </div>
+      </div>
+
+      <div id="scene-bottom">
+        <div id="fw-status-text">Initializing firmware flash...</div>
+        <div id="fw-bar-wrap">
+          <div id="fw-bar"></div>
+          <div id="fw-bar-pct">0%</div>
+        </div>
+        <div id="fw-log"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+  <script>
+    (function () {
+      // Dynamic GPIO header pin generation
+      const gpioPinsGroup = document.getElementById('gpio-pins');
+      if (gpioPinsGroup) {
+        let gpioHTML = '';
+        for (let i = 0; i < 20; i++) {
+          const x = 20 + i * 8.42;
+          gpioHTML += `<rect x="${x}" y="16" width="6" height="6" fill="#c8a000" />`;
+          gpioHTML += `<rect x="${x}" y="24" width="6" height="6" fill="#c8a000" />`;
+        }
+        gpioPinsGroup.innerHTML = gpioHTML;
+      }
+
+      const CODE_LINES = [
+        "#include <stdio.h>",
+        "#include <stdlib.h>",
+        "#include <wiringPi.h>",
+        "",
+        "#define LED_PIN    17",
+        "#define SENSOR_PIN 27",
+        "#define BAUD_RATE  115200",
+        "",
+        "void gpio_init() {",
+        "  wiringPiSetupGpio();",
+        "  pinMode(LED_PIN, OUTPUT);",
+        "  pinMode(SENSOR_PIN, INPUT);",
+        "  digitalWrite(LED_PIN, LOW);",
+        "}",
+        "",
+        "int read_sensor() {",
+        "  return digitalRead(SENSOR_PIN);",
+        "}",
+        "",
+        "void flash_sequence() {",
+        "  for(int i=0; i<3; i++) {",
+        "    digitalWrite(LED_PIN, HIGH);",
+        "    delay(200);",
+        "    digitalWrite(LED_PIN, LOW);",
+        "    delay(200);",
+        "  }",
+        "}",
+        "",
+        "int main() {",
+        "  gpio_init();",
+        "  printf(\"Boot OK\\n\");",
+        "  flash_sequence();",
+        "  while(1) {",
+        "    int val = read_sensor();",
+        "    printf(\"Sensor: %d\\n\", val);",
+        "    delay(500);",
+        "  }",
+        "  return 0;",
+        "}"
+      ];
+
+      const LOGS = [
+        { pct: 0, msg: "esptool.py v4.6 — Connecting to /dev/ttyUSB0..." },
+        { pct: 8, msg: "Chip is Raspberry Pi BCM2711 (4B)" },
+        { pct: 15, msg: "Uploading stub..." },
+        { pct: 22, msg: "Running stub..." },
+        { pct: 30, msg: "Configuring flash size..." },
+        { pct: 38, msg: "Compressed 847,293 bytes to 524,112..." },
+        { pct: 45, msg: "Writing at 0x00010000... (12%)" },
+        { pct: 52, msg: "Writing at 0x00040000... (37%)" },
+        { pct: 60, msg: "Writing at 0x00080000... (62%)" },
+        { pct: 68, msg: "Writing at 0x000c0000... (81%)" },
+        { pct: 76, msg: "Verifying flash..." },
+        { pct: 84, msg: "Hash of data verified OK" },
+        { pct: 90, msg: "Leaving... Hard resetting via RTS pin..." },
+        { pct: 96, msg: "Firmware flash complete!" },
+        { pct: 100, msg: "BOOT SEQUENCE INITIATED" }
+      ];
+
+      function getLineColor(line) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('#include') || trimmed.startsWith('#define')) return '#ffaa00';
+        if (trimmed.startsWith('//')) return '#555555';
+        if (trimmed.includes('void') || trimmed.includes('int') || trimmed.includes('return')) return '#00ff88';
+        if (trimmed.includes('{') || trimmed.includes('}')) return '#00e5ff';
+        if (trimmed === '') return 'transparent';
+        return '#aaaaaa';
+      }
+
+      const activeTimers = [];
+      function addTimeout(fn, delay) {
+        const id = setTimeout(fn, delay);
+        activeTimers.push({ id, type: 'timeout' });
+        return id;
+      }
+      function addInterval(fn, delay) {
+        const id = setInterval(fn, delay);
+        activeTimers.push({ id, type: 'interval' });
+        return id;
+      }
+
+      function cleanUpAndExit() {
+        activeTimers.forEach(timer => {
+          if (timer.type === 'timeout') {
+            clearTimeout(timer.id);
+          } else {
+            clearInterval(timer.id);
+          }
+        });
+        const overlay = document.getElementById('fw-overlay');
+        if (overlay) {
+          overlay.style.display = 'none';
+        }
+      }
+
+      // Add skip button click listener immediately
+      const skipBtn = document.getElementById('skip-btn');
+      if (skipBtn) {
+        skipBtn.addEventListener('click', cleanUpAndExit);
+      }
+
+      window.addEventListener('load', function () {
+        const overlay = document.getElementById('fw-overlay');
+        const terminalLines = document.getElementById('terminal-lines');
+        const terminalScreen = document.getElementById('terminal-screen');
+        const statusText = document.getElementById('fw-status-text');
+        const progressBar = document.getElementById('fw-bar');
+        const progressBarPct = document.getElementById('fw-bar-pct');
+        const logConsole = document.getElementById('fw-log');
+
+        // --- PHASE 1: STARTUP (0ms) ---
+        let codeIndex = 0;
+        const codeInterval = addInterval(() => {
+          if (codeIndex < CODE_LINES.length) {
+            const line = CODE_LINES[codeIndex];
+            const lineDiv = document.createElement('div');
+            if (line.trim() === '') {
+              lineDiv.innerHTML = '&nbsp;';
+            } else {
+              lineDiv.textContent = line;
+            }
+            lineDiv.style.color = getLineColor(line);
+            terminalLines.appendChild(lineDiv);
+            terminalScreen.scrollTop = terminalScreen.scrollHeight;
+            codeIndex++;
+          } else {
+            clearInterval(codeInterval);
+          }
+        }, 120);
+
+        // --- PHASE 2: UPLOADING (500ms to 4500ms) ---
+        addTimeout(() => {
+          statusText.textContent = "Flashing firmware... do not disconnect";
+
+          const uploadStart = Date.now();
+          const pctInterval = addInterval(() => {
+            const elapsed = Date.now() - uploadStart;
+            let pct = Math.floor((elapsed / 4000) * 100);
+
+            if (pct >= 100) {
+              pct = 100;
+              clearInterval(pctInterval);
+            }
+
+            if (pct >= 0) {
+              progressBar.style.width = pct + '%';
+              progressBarPct.textContent = pct + '%';
+
+              // Milestone Logs
+              const currentLog = LOGS.slice().reverse().find(item => item.pct <= pct);
+              if (currentLog) {
+                logConsole.textContent = currentLog.msg;
+              }
+
+              // 50% LED update
+              if (pct >= 50) {
+                const ledAct = document.getElementById('led-act');
+                if (ledAct) ledAct.style.fill = '#ffaa00';
+              }
+            }
+          }, 100);
+        }, 500);
+
+        // --- PHASE 3: VERIFICATION (4500ms to 5000ms) ---
+        addTimeout(() => {
+          progressBar.style.backgroundColor = '#00ff88';
+          progressBar.style.boxShadow = '0 0 12px #00ff88';
+          statusText.textContent = "Verifying... Hash OK ✓";
+          statusText.style.color = '#00ff88';
+          statusText.style.textShadow = '0 0 8px rgba(0, 255, 136, 0.6)';
+          const ledAct = document.getElementById('led-act');
+          if (ledAct) ledAct.style.fill = '#00ff88';
+        }, 4500);
+
+        // Ripple generator helper
+        function runRipple(startOffset) {
+          const leds = ['led-pwr', 'led-act', 'led-d1', 'led-d2', 'led-d3'];
+          const originalColors = ['#ff4444', '#00ff88', '#555555', '#555555', '#555555'];
+
+          leds.forEach((id, i) => {
+            addTimeout(() => {
+              const ledEl = document.getElementById(id);
+              if (ledEl) {
+                ledEl.style.fill = '#00ff88';
+                addTimeout(() => {
+                  ledEl.style.fill = originalColors[i];
+                }, 200);
+              }
+            }, startOffset + i * 120);
+          });
+        }
+
+        // --- PHASE 4: BOOT SEQUENCE (5000ms to 5800ms) ---
+        addTimeout(() => {
+          statusText.textContent = "BOOT COMPLETE — Launching portfolio...";
+
+          // Terminal final line
+          const finalLine = document.createElement('div');
+          finalLine.textContent = "// THARUN RAMESH PORTFOLIO v1.0 — ONLINE";
+          finalLine.style.color = '#00e5ff';
+          finalLine.style.fontWeight = 'bold';
+          terminalLines.appendChild(finalLine);
+          terminalScreen.scrollTop = terminalScreen.scrollHeight;
+
+          // Ripple 3 times
+          runRipple(0);
+          runRipple(250);
+          runRipple(500);
+        }, 5000);
+
+        // --- PHASE 5: SCREEN EXPAND (5800ms to 7000ms) ---
+        addTimeout(() => {
+          overlay.classList.add('phase-5');
+
+          // Inject glow-burst
+          const glowBurst = document.createElement('div');
+          glowBurst.id = 'glow-burst';
+          overlay.appendChild(glowBurst);
+
+          addTimeout(() => {
+            glowBurst.style.transition = 'opacity 300ms ease-out';
+            glowBurst.style.opacity = '1';
+          }, 10);
+
+          addTimeout(() => {
+            glowBurst.style.transition = 'opacity 500ms ease-in';
+            glowBurst.style.opacity = '0';
+          }, 310);
+        }, 5800);
+
+        addTimeout(() => {
+          overlay.classList.add('phase-5-fadeout');
+        }, 6400);
+
+        // --- PHASE 6: PORTFOLIO REVEAL (7000ms) ---
+        addTimeout(() => {
+          cleanUpAndExit();
+        }, 7000);
+      });
+    })();
+  </script>
+
+  <div id="img-ticker">
+    <div id="img-ticker-track">
+
+      <!-- SET 1 -->
+      <img src="components/arduino_uno.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/arduino_uno_r4.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/arduino_nano.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/esp32_devkit.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/nodemcu_esp8266.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/esp32_cam.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/stm32_nucleo.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/raspberry_pi4.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/rpi_pico2w.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+
+      <!-- SET 2 -->
+      <img src="components/arduino_uno.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/arduino_uno_r4.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/arduino_nano.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/esp32_devkit.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/nodemcu_esp8266.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/esp32_cam.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/stm32_nucleo.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/raspberry_pi4.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/rpi_pico2w.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+
+      <!-- SET 3 -->
+      <img src="components/arduino_uno.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/arduino_uno_r4.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/arduino_nano.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/esp32_devkit.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/nodemcu_esp8266.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/esp32_cam.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/stm32_nucleo.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/raspberry_pi4.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/rpi_pico2w.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+
+      <!-- SET 4 -->
+      <img src="components/arduino_uno.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/arduino_uno_r4.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/arduino_nano.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/esp32_devkit.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/nodemcu_esp8266.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/esp32_cam.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/stm32_nucleo.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/raspberry_pi4.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+      <img src="components/rpi_pico2w.png" alt="" class="ticker-img" draggable="false"
+        onerror="this.style.display='none'" />
+
+    </div>
+  </div>
+</body>
+
 </html>

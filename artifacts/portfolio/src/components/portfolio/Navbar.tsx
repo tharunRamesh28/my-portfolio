@@ -37,10 +37,10 @@ export default function Navbar() {
 
       {/* Navbar */}
       <nav
-        className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 py-4"
+        className="fixed top-0 left-0 right-0 z-[1000] flex items-center justify-between px-6 py-4"
         style={{
           borderBottom: "1px solid rgba(0,229,255,0.15)",
-          background: "transparent",
+          background: "#000000",
         }}
       >
         <span

@@ -4,14 +4,22 @@ import { motion } from "framer-motion";
 
 export default function About() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "-40px" });
 
   return (
-    <section id="about" ref={ref}>
+    <section
+      id="about"
+      ref={ref}
+      style={{
+        marginTop: "180px",
+        position: "relative",
+        zIndex: 10,
+      }}
+    >
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 100 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 1.2, ease: [0.25, 0.1, 0.25, 1] }}
       >
         <h2
           className="text-xs tracking-[0.4em] uppercase mb-8 text-center"
@@ -28,7 +36,11 @@ export default function About() {
 
         <div
           className="glass-card rounded-lg p-8 relative overflow-hidden"
-          style={{ borderRadius: "8px" }}
+          style={{
+            borderRadius: "8px",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+          }}
         >
           {/* Left electric blue accent line */}
           <div
