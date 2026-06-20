@@ -285,7 +285,7 @@ export default function Hero() {
           ref={heroVideoRef}
           id="hero-video"
           className="hero-video"
-          src="intro/Video Project 6.mp4"
+          src="/intro/video-project-7.mp4"
           autoPlay
           muted
           playsInline
