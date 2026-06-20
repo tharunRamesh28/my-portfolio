@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { createPortal } from "react-dom";
 
 import { ChevronDown } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -66,13 +65,13 @@ function ParticleCanvas() {
     resize();
     window.addEventListener("resize", resize);
 
-    const N = 70;
+    const N = 90;
     const particles = Array.from({ length: N }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.35,
-      vy: (Math.random() - 0.5) * 0.35,
-      r: Math.random() * 2 + 0.8,
+      vx: (Math.random() - 0.5) * 0.45,
+      vy: (Math.random() - 0.5) * 0.45,
+      r: Math.random() * 2.2 + 0.9,
     }));
 
     const handleMouse = (e: MouseEvent) => {
@@ -89,8 +88,8 @@ function ParticleCanvas() {
         const dy = mouse.current.y - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 120) {
-          p.vx += (dx / dist) * 0.012;
-          p.vy += (dy / dist) * 0.012;
+          p.vx += (dx / dist) * 0.015;
+          p.vy += (dy / dist) * 0.015;
         }
         p.vx *= 0.99;
         p.vy *= 0.99;
@@ -103,8 +102,8 @@ function ParticleCanvas() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(0,229,255,0.5)";
-        ctx.shadowBlur = 8;
+        ctx.fillStyle = "rgba(0,229,255,0.65)";
+        ctx.shadowBlur = 10;
         ctx.shadowColor = "#00E5FF";
         ctx.fill();
       });
@@ -118,7 +117,7 @@ function ParticleCanvas() {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(0,229,255,${0.12 * (1 - d / 110)})`;
+            ctx.strokeStyle = `rgba(0,229,255,${0.15 * (1 - d / 110)})`;
             ctx.lineWidth = 0.5;
             ctx.shadowBlur = 0;
             ctx.stroke();
@@ -137,21 +136,19 @@ function ParticleCanvas() {
     };
   }, []);
 
-  return createPortal(
+  return (
     <canvas
       ref={canvasRef}
       style={{
-        position: "fixed",
+        position: "absolute",
         top: 0,
         left: 0,
         width: "100%",
         height: "100%",
-        zIndex: 0,
         pointerEvents: "none",
-        opacity: 0.7,
+        opacity: 0.75,
       }}
-    />,
-    document.body
+    />
   );
 }
 
@@ -167,12 +164,14 @@ export default function Hero() {
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   const [videoState, setVideoState] = useState<'playing' | 'paused' | 'ended'>('playing');
   const [videoFade, setVideoFade] = useState(1); // 1 = fully visible
+  const [isMuted, setIsMuted] = useState(true);
 
   const handlePlay = useCallback(() => {
     const vid = heroVideoRef.current;
     if (!vid) return;
     vid.play().catch(() => {});
     setVideoState('playing');
+    setIsMuted(false);
   }, []);
 
   const handlePause = useCallback(() => {
@@ -190,6 +189,7 @@ export default function Hero() {
     vid.currentTime = 0;
     vid.play().catch(() => {});
     setVideoState('playing');
+    setIsMuted(false);
     setTimeout(() => setVideoFade(1), 50);
   }, []);
 
@@ -287,7 +287,7 @@ export default function Hero() {
           className="hero-video"
           src="/intro/video-project-7.mp4"
           autoPlay
-          muted
+          muted={isMuted}
           playsInline
           loop={false}
           onEnded={handleVideoEnded}
@@ -311,13 +311,13 @@ export default function Hero() {
             </button>
           )}
 
-          {/* While paused or ended: Show Continue button */}
+          {/* While paused or ended: Show Play button */}
           {(videoState === 'paused' || videoState === 'ended') && (
-            <button className="vc-btn vc-pill vc-glow" onClick={handlePlay} aria-label="Continue" title="Continue">
+            <button className="vc-btn vc-pill vc-glow" onClick={handlePlay} aria-label="Play" title="Play">
               <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12" style={{ marginRight: '8px' }}>
                 <polygon points="6,3 20,12 6,21" />
               </svg>
-              Continue
+              Play
             </button>
           )}
 
@@ -329,6 +329,19 @@ export default function Hero() {
                 <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
               </svg>
               Replay
+            </button>
+          )}
+
+          {/* Mute/Unmute toggle */}
+          {isMuted ? (
+            <button className="vc-btn vc-pill" onClick={() => setIsMuted(false)} aria-label="Unmute" title="Unmute">
+              <span style={{ marginRight: '6px', fontSize: '11px', display: 'inline-flex', alignItems: 'center' }}>🔊</span>
+              Unmute
+            </button>
+          ) : (
+            <button className="vc-btn vc-pill" onClick={() => setIsMuted(true)} aria-label="Mute" title="Mute">
+              <span style={{ marginRight: '6px', fontSize: '11px', display: 'inline-flex', alignItems: 'center' }}>🔇</span>
+              Mute
             </button>
           )}
         </div>
@@ -537,9 +550,9 @@ export default function Hero() {
         }
 
         .hero-particle-wrap {
-          position: fixed;
+          position: absolute;
           inset: 0;
-          z-index: 0;
+          z-index: 1;
           pointer-events: none;
         }
 
@@ -582,7 +595,7 @@ export default function Hero() {
           position: absolute;
           top: 0;
           left: 0;
-          width: 55vw;
+          width: 50vw;
           height: 100vh;
           z-index: 2;
           overflow: hidden;
@@ -653,7 +666,8 @@ export default function Hero() {
           position: relative;
           z-index: 5;
           margin-left: 50%;
-          padding-left: 60px;
+          width: 50%;
+          padding-left: 10vw;
           padding-right: 5vw;
           height: 100vh;
           display: flex;
@@ -825,8 +839,9 @@ export default function Hero() {
             width: 50vw;
           }
           .hero-content {
-            margin-left: 45%;
-            padding-left: 40px;
+            margin-left: 50%;
+            width: 50%;
+            padding-left: 6vw;
           }
         }
 
