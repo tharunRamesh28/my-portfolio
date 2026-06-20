@@ -441,15 +441,6 @@ export default function Hero() {
 
       {/* ═══ RIGHT: CONTENT ═══ */}
       <motion.div className="hero-content" style={{ opacity: contentOpacity, y: contentY }}>
-        {/* Label */}
-        <motion.p
-          className="hero-label"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.6 }}
-        >
-          ECE Student · Chennai, India
-        </motion.p>
 
         {/* Name */}
         <motion.h1
@@ -763,15 +754,7 @@ export default function Hero() {
           will-change: transform, opacity;
         }
 
-        .hero-label {
-          font-family: 'Courier New', monospace;
-          font-size: 12px;
-          color: #00e5ff;
-          opacity: 0.5;
-          letter-spacing: 3px;
-          margin: 0 0 20px 0;
-          text-transform: uppercase;
-        }
+
 
         .hero-name {
           font-family: 'Orbitron', sans-serif;
