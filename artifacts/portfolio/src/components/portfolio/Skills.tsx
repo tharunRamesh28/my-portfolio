@@ -70,7 +70,7 @@ export default function Skills() {
                     boxShadow: `0 0 18px ${group.color}80`,
                     borderColor: group.color,
                   }}
-                  className="px-4 py-2 text-xs rounded-sm cursor-default select-none transition-all duration-300"
+                  className="px-3 py-1.5 md:px-4 md:py-2 text-xs rounded-sm cursor-default select-none transition-all duration-300"
                   style={{
                     background: "rgba(255,255,255,0.05)",
                     backdropFilter: "blur(8px)",

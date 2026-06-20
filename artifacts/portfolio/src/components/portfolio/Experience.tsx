@@ -104,7 +104,7 @@ export default function Experience() {
                 }}
               />
 
-              <div className="glass-card rounded-lg p-6">
+              <div className="glass-card rounded-lg p-5 md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
                   <div>
                     <h3

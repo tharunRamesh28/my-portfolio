@@ -43,7 +43,7 @@ export default function Projects() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: i * 0.15, duration: 0.5 }}
             whileHover={{ y: -6, boxShadow: "0 12px 40px rgba(0,229,255,0.25)" }}
-            className="glass-card rounded-lg p-6 relative overflow-hidden transition-all duration-300 cursor-default"
+            className="glass-card rounded-lg p-5 md:p-6 relative overflow-hidden transition-all duration-300 cursor-default"
             data-testid={`card-project-${i}`}
           >
             {/* Top-left accent */}

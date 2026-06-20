@@ -31,7 +31,7 @@ export default function Home() {
       
       <main className="relative z-10 flex flex-col items-center">
         <Hero />
-        <div className="w-full max-w-[1100px] px-6 mx-auto flex flex-col gap-[100px] pb-[100px]">
+        <div className="w-full max-w-[1100px] px-6 mx-auto flex flex-col gap-16 md:gap-[100px] pb-16 md:pb-[100px]">
           <About />
           <Skills />
           <Projects />

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 
 import { ChevronDown } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -164,15 +165,56 @@ export default function Hero() {
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   const [videoState, setVideoState] = useState<'playing' | 'paused' | 'ended'>('playing');
   const [videoFade, setVideoFade] = useState(1); // 1 = fully visible
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false); // Default to false (unmuted by default)
 
-  const handlePlay = useCallback(() => {
+  const [loaderFinished, setLoaderFinished] = useState(() => {
+    const overlay = document.getElementById("fw-overlay");
+    return !overlay || overlay.style.display === "none";
+  });
+
+  const [isIntersecting, setIsIntersecting] = useState(true);
+
+  // Play video unmuted by default with silent fallback
+  const playVideo = useCallback(() => {
     const vid = heroVideoRef.current;
     if (!vid) return;
-    vid.play().catch(() => {});
-    setVideoState('playing');
+
+    vid.muted = false;
     setIsMuted(false);
+
+    vid.play()
+      .then(() => {
+        setVideoState('playing');
+      })
+      .catch((err) => {
+        console.warn("Unmuted playback blocked, playing muted...", err);
+        vid.muted = true;
+        setIsMuted(true);
+        vid.play()
+          .then(() => {
+            setVideoState('playing');
+            // Unmute on first user interaction anywhere
+            const unmuteOnInteraction = () => {
+              vid.muted = false;
+              setIsMuted(false);
+              document.removeEventListener('click', unmuteOnInteraction);
+              document.removeEventListener('touchstart', unmuteOnInteraction);
+              document.removeEventListener('keydown', unmuteOnInteraction);
+            };
+            document.addEventListener('click', unmuteOnInteraction);
+            document.addEventListener('touchstart', unmuteOnInteraction);
+            document.addEventListener('keydown', unmuteOnInteraction);
+          })
+          .catch((e) => {
+            console.error("Playback failed completely:", e);
+          });
+      });
   }, []);
+
+  const handlePlay = useCallback(() => {
+    setVideoState('playing');
+    playVideo();
+  }, [playVideo]);
 
   const handlePause = useCallback(() => {
     const vid = heroVideoRef.current;
@@ -187,11 +229,10 @@ export default function Hero() {
     // Fade out, reset, fade in
     setVideoFade(0.8);
     vid.currentTime = 0;
-    vid.play().catch(() => {});
     setVideoState('playing');
-    setIsMuted(false);
+    playVideo();
     setTimeout(() => setVideoFade(1), 50);
-  }, []);
+  }, [playVideo]);
 
   const handleVideoEnded = useCallback(() => {
     const vid = heroVideoRef.current;
@@ -204,6 +245,64 @@ export default function Hero() {
 
   /* ═══ SCROLL-LINKED ANIMATIONS ═══ */
   const heroRef = useRef<HTMLElement>(null);
+
+  // Monitor loader completion
+  useEffect(() => {
+    const handleLoaderFinished = () => {
+      setLoaderFinished(true);
+    };
+    window.addEventListener('loaderFinished', handleLoaderFinished);
+
+    const interval = setInterval(() => {
+      const overlay = document.getElementById('fw-overlay');
+      if (!overlay || overlay.style.display === 'none') {
+        setLoaderFinished(true);
+        clearInterval(interval);
+      }
+    }, 100);
+
+    return () => {
+      window.removeEventListener('loaderFinished', handleLoaderFinished);
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Intersection observer to track hero section visibility and pause/resume video
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsIntersecting(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Manage video play/pause transitions programmatically
+  useEffect(() => {
+    const vid = heroVideoRef.current;
+    if (!vid) return;
+
+    if (loaderFinished) {
+      if (isIntersecting) {
+        if (videoState === 'playing') {
+          playVideo();
+        }
+      } else {
+        vid.pause();
+      }
+    } else {
+      vid.pause();
+    }
+  }, [loaderFinished, isIntersecting, videoState, playVideo]);
+
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -286,7 +385,7 @@ export default function Hero() {
           id="hero-video"
           className="hero-video"
           src="/intro/video-project-7.mp4"
-          autoPlay
+          preload="auto"
           muted={isMuted}
           playsInline
           loop={false}
@@ -329,19 +428,6 @@ export default function Hero() {
                 <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
               </svg>
               Replay
-            </button>
-          )}
-
-          {/* Mute/Unmute toggle */}
-          {isMuted ? (
-            <button className="vc-btn vc-pill" onClick={() => setIsMuted(false)} aria-label="Unmute" title="Unmute">
-              <span style={{ marginRight: '6px', fontSize: '11px', display: 'inline-flex', alignItems: 'center' }}>🔊</span>
-              Unmute
-            </button>
-          ) : (
-            <button className="vc-btn vc-pill" onClick={() => setIsMuted(true)} aria-label="Mute" title="Mute">
-              <span style={{ marginRight: '6px', fontSize: '11px', display: 'inline-flex', alignItems: 'center' }}>🔇</span>
-              Mute
             </button>
           )}
         </div>
@@ -875,6 +961,7 @@ export default function Hero() {
 
           .hero-content {
             margin-left: 0;
+            width: 100%;
             padding: 0 24px 80px;
             height: auto;
             min-height: 45vh;
@@ -920,6 +1007,9 @@ export default function Hero() {
           .hero-btn {
             padding: 12px 24px;
             font-size: 11px;
+          }
+          .hero-name {
+            font-size: 2.2rem !important;
           }
         }
       `}</style>

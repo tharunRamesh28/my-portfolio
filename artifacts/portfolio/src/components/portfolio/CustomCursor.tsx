@@ -22,7 +22,7 @@ export default function CustomCursor() {
 
   return (
     <div
-      className="fixed pointer-events-none z-[100] transition-transform duration-100 ease-out flex items-center justify-center"
+      className="fixed pointer-events-none z-[100] transition-transform duration-100 ease-out flex items-center justify-center custom-cursor"
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,

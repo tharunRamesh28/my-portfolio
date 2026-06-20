@@ -73,7 +73,7 @@ export default function Contact() {
                 boxShadow: `0 0 25px ${c.hoverColor}40`,
                 borderColor: `${c.hoverColor}60`,
               }}
-              className="glass-card rounded-lg p-5 flex items-center gap-4 transition-all duration-300"
+              className="glass-card rounded-lg p-4 md:p-5 flex items-center gap-4 transition-all duration-300"
               style={{ cursor: c.href ? "pointer" : "default" }}
               data-testid={`card-contact-${c.label.toLowerCase()}`}
             >

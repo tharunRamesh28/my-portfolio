@@ -154,3 +154,9 @@
 .neon-border {
   box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
 }
+
+@media (max-width: 1024px) or (pointer: coarse) {
+  .custom-cursor {
+    display: none !important;
+  }
+}

@@ -634,6 +634,8 @@
         if (overlay) {
           overlay.style.display = 'none';
         }
+        window.loaderFinished = true;
+        window.dispatchEvent(new CustomEvent('loaderFinished'));
       }
 
       // Add skip button click listener immediately

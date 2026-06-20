@@ -10,8 +10,8 @@ export default function About() {
     <section
       id="about"
       ref={ref}
+      className="mt-[80px] md:mt-[180px]"
       style={{
-        marginTop: "180px",
         position: "relative",
         zIndex: 10,
       }}
@@ -35,7 +35,7 @@ export default function About() {
         </h2>
 
         <div
-          className="glass-card rounded-lg p-8 relative overflow-hidden"
+          className="glass-card rounded-lg p-5 md:p-8 relative overflow-hidden"
           style={{
             borderRadius: "8px",
             backdropFilter: "blur(12px)",

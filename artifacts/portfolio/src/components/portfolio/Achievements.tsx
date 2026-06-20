@@ -302,7 +302,7 @@ export default function Achievements() {
                   boxShadow: `0 12px 40px rgba(255,215,0,0.2)`,
                 }}
                 onClick={() => openModal(a)}
-                className="glass-card rounded-lg p-8 flex flex-col items-center text-center transition-all duration-300"
+                className="glass-card rounded-lg p-5 md:p-8 flex flex-col items-center text-center transition-all duration-300"
                 style={{ cursor: clickable ? "pointer" : "default" }}
                 data-testid={`card-achievement-${i}`}
               >
